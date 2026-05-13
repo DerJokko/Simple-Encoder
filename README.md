@@ -32,7 +32,7 @@ java -jar encoder.jar "DEIN_STRING_HIER"
 ## 📌 Beispiel
 
 ```bash
-java -jar encoder.jar "https://visorat-drehkreuz.onrender.com/receive"
+java -jar encoder.jar "https://example.com/site"
 ```
 
 ---

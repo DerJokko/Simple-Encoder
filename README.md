@@ -21,18 +21,28 @@ Es handelt sich dabei um eine einfache Obfuscation-Methode bestehend aus:
 
 ## ▶️ String encoden
 
-Du übergibst einfach einen String als Argument:
+Du übergibst einen String und einen XOR-Key als Argumente:
 
 ```bash
-java -jar encoder.jar "DEIN_STRING_HIER"
+java -jar encoder.jar <input> <xor_key>
 ```
+
+Der `<xor_key>` kann sein:
+- Ein einzelner Character (z. B. `K`)
+- Eine Zahl (z. B. `75`)
 
 ---
 
-## 📌 Beispiel
+## 📌 Beispiele
 
+Mit Character-Key:
 ```bash
-java -jar encoder.jar "https://example.com/site"
+java -jar encoder.jar "https://example.com/site" K
+```
+
+Mit numerischem Key:
+```bash
+java -jar encoder.jar "https://example.com/site" 75
 ```
 
 ---
@@ -149,9 +159,9 @@ Für bessere Obfuscation in Java Projekten:
 
 # 🧪 Kurzworkflow
 
-1. String encoden:
+1. String encoden (mit deinem gewählten Key):
 ```bash
-java -jar encoder.jar "dein string"
+java -jar encoder.jar "dein string" K
 ```
 
 2. Output kopieren

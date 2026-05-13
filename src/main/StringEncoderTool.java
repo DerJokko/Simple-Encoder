@@ -3,13 +3,20 @@ import java.util.Base64;
 public class StringEncoderTool {
 
     public static void main(String[] args) {
-        if (args.length == 0) {
-            System.out.println("Usage: java StringEncoderTool <string>");
+        if (args.length < 2) {
+            System.out.println("Usage: java StringEncoderTool <string> <xor_key>");
             return;
         }
 
         String input = args[0];
-        char key = 'K'; // XOR key (kannst du ändern)
+        char key;
+        
+        // Parse XOR key - try as number first, otherwise use first character
+        try {
+            key = (char) Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            key = args[1].charAt(0);
+        }
 
         // XOR encode
         char[] xored = new char[input.length()];

@@ -1,181 +1,86 @@
 # String Encoder Tool (Base64 + XOR)
 
-Dieses Projekt stellt ein kleines Java-Tool bereit, mit dem du Strings (z. B. URLs, Tokens oder API-Keys) so encoden kannst, dass sie im dekompilierten Java-Code nicht mehr direkt lesbar sind.
+A small Java utility for obfuscating strings with XOR and Base64 so they are not directly visible in decompiled code.
 
-Es handelt sich dabei um eine einfache Obfuscation-Methode bestehend aus:
-- XOR-Verschlüsselung
-- Base64-Encoding
-
-⚠️ Wichtig: Das ist **keine echte kryptografische Sicherheit**, sondern nur Obfuscation gegen einfaches Reverse Engineering.
+⚠️ This is not cryptographic security. It is simple obfuscation only.
 
 ---
 
-# 📦 Voraussetzungen
+# 📦 Requirements
 
-- Java 8 oder höher installiert
-- `encoder.jar` (das gebaute Tool)
+- Java 8 or higher
+- `encoder.jar`
 
 ---
 
-# 🚀 Verwendung des Encoder Tools
+# 🚀 Usage
 
-## ▶️ String encoden
+## CLI mode
 
-Du übergibst einen String und einen XOR-Key als Argumente:
+Encode a string from the command line:
 
 ```bash
 java -jar encoder.jar <input> <xor_key>
 ```
 
-Der `<xor_key>` kann sein:
-- Ein einzelner Character (z. B. `K`)
-- Eine Zahl (z. B. `75`)
+The `<xor_key>` can be a single character (for example `K`) or a number (`75`).
 
----
+Example:
 
-## 📌 Beispiele
-
-Mit Character-Key:
 ```bash
 java -jar encoder.jar "https://example.com/site" K
 ```
 
-Mit numerischem Key:
+## GUI mode
+
+Run without arguments to open the graphical encoder:
+
 ```bash
-java -jar encoder.jar "https://example.com/site" 75
+java -jar encoder.jar
 ```
+
+Enter the string and XOR key, then click **Generate**. Use **Copy Generated String** to copy the result.
 
 ---
 
-## 📤 Ausgabe
+# 📌 Output
 
-Das Tool gibt dann z. B. folgendes aus:
+The tool prints or shows an encoded string like:
 
 ```
-Encoded string:
 Q1d9c3d2c3h0...
 ```
 
-Dieser String ist dein verschlüsselter Wert, den du später in deinem Java-Projekt verwendest.
+Use that value in your Java code.
 
 ---
 
-# 🧠 Einbindung in ein Java-Projekt
+# 🔧 Decode pattern
 
-## 🔐 1. Encoded String speichern
-
-Du ersetzt die originale URL oder den String durch den Encoded-Wert:
-
-```java
-String enc = "Q1d9c3d2c3h0...";
-char key = 'K';
-```
-
----
-
-## 🔓 2. Decoder (inline im Code)
-
-Der Decoder wird direkt in deine Methode eingefügt, ohne extra Klassen:
+Use this pattern to decode the string in Java:
 
 ```java
 byte[] decoded = java.util.Base64.getDecoder().decode(enc);
 String xored = new String(decoded);
-
 char[] out = new char[xored.length()];
 for (int i = 0; i < xored.length(); i++) {
-    out[i] = (char)(xored.charAt(i) ^ key);
+    out[i] = (char) (xored.charAt(i) ^ key);
 }
-
 String result = new String(out);
 ```
 
 ---
 
-## 🌐 3. Beispiel: Verwendung mit HttpURLConnection
+# ⚠️ Limitations
 
-```java
-String enc = "Q1d9c3d2c3h0...";
-char key = 'K';
-
-byte[] decoded = java.util.Base64.getDecoder().decode(enc);
-String xored = new String(decoded);
-
-char[] out = new char[xored.length()];
-for (int i = 0; i < xored.length(); i++) {
-    out[i] = (char)(xored.charAt(i) ^ key);
-}
-
-String urlStr = new String(out);
-
-@SuppressWarnings("deprecation")
-HttpURLConnection conn =
-        (HttpURLConnection) new URL(urlStr).openConnection();
-
-conn.setRequestMethod("GET");
-conn.connect();
-```
+- Not a secure encryption method
+- XOR key is visible in code
+- Base64 is easy to decode
+- Runtime values can be inspected in a debugger
 
 ---
 
-# 🔐 Was wird dadurch erreicht?
+# 🧠 Recommendation
 
-✔ Kein Klartext-String im JAR  
-✔ URL ist im Decompiled Code nicht direkt sichtbar  
-✔ Hürde für einfache Reverse Engineering Tools  
-
----
-
-# ⚠️ Wichtige Einschränkungen
-
-Diese Methode ist nur Obfuscation:
-
-- ❌ Kein echter Schutz gegen Reverse Engineering  
-- ❌ XOR-Key ist im Code sichtbar  
-- ❌ Base64 ist trivial dekodierbar  
-- ❌ Runtime-Werte können im Debugger ausgelesen werden  
-
----
-
-# 🧠 Sicherheitsniveau
-
-| Methode | Schutz |
-|----------|--------|
-| Klartext String | ❌ keiner |
-| Base64 | 🟡 sehr schwach |
-| XOR + Base64 | 🟡 mittel |
-| echte String Encryption Tools | 🟢 stark |
-
----
-
-# 🚀 Empfehlung
-
-Für bessere Obfuscation in Java Projekten:
-
-- ProGuard für Code Obfuscation  
-- Stringer / Allatori für echte String Encryption  
-- Kombination im Build Prozess (Gradle Task nach build)
-
----
-
-# 🧪 Kurzworkflow
-
-1. String encoden (mit deinem gewählten Key):
-```bash
-java -jar encoder.jar "dein string" K
-```
-
-2. Output kopieren
-
-3. In Code einfügen:
-```java
-String enc = "...";
-```
-
-4. Decoder inline verwenden
-
----
-
-# 🧠 Fazit
-
-Dieses Tool dient dazu, Strings im Code unlesbar zu machen und einfache Decompiler zu verwirren. Es ersetzt keine echte Security, sondern erhöht nur den Aufwand für Reverse Engineering.
+Use this only for low-risk obfuscation. For stronger protection, apply code obfuscation tools such as ProGuard or dedicated string encryption libraries.
 ```
